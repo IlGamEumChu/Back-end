@@ -1,0 +1,23 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/demar-server
+permissions:
+  - object: /home/ubuntu/demar-server
+    owner: ubuntu
+  - object: /home/ubuntu/demar-server/*/**
+    owner: ubuntu
+hooks:
+  BeforeInstall:
+    - location: scripts/delete-before-process.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: scripts/change-permissions.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/run-application.sh
+      timeout: 300
+      runas: root
