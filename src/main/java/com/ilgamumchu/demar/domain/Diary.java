@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Builder
 @Getter
@@ -18,10 +19,12 @@ public class Diary implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "diary_id")
     private Long id;
 
-    @Column(name="user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user_id;
 
     @Column(nullable = false)
     private String title;
@@ -32,7 +35,6 @@ public class Diary implements Serializable {
     @Column(nullable = false)
     private int emotion;
 
-    @CreationTimestamp
-    @Column(name="created_at", nullable = false, length = 20, updatable = false)
-    private LocalDateTime createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_at;
 }
