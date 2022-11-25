@@ -1,9 +1,14 @@
 package com.ilgamumchu.demar.controller;
 
+import com.ilgamumchu.demar.domain.User;
 import com.ilgamumchu.demar.dto.DiaryResponseDTO;
 import com.ilgamumchu.demar.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import com.ilgamumchu.demar.security.jwt.UserDetailsImpl;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -13,9 +18,14 @@ import java.util.List;
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @GetMapping(value = "/{userId}")
-    public List<DiaryResponseDTO> getAllDiary(@PathVariable Long userId ){
-        return diaryService.findAllByUserId(userId);
+    @GetMapping(value = "/{diaryId}")
+    public String getAllDiary(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long diaryId){
+//        if (userDetails != null) {
+//            User user = userDetails.getUser();
+//            System.out.println(user.getRole());
+//        }
+        System.out.println(userDetails.getUser().getId());
+        return "test";
     }
 
 }
