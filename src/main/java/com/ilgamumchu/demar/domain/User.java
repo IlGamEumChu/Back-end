@@ -1,22 +1,22 @@
 package com.ilgamumchu.demar.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-@Entity
+@Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
-@Table(name="user")
+@Table(name="User")
+@Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(nullable = false)
@@ -28,16 +28,13 @@ public class User {
     @Column(length = 100)
     private String password;
 
-
     private String sp_id;
 
+    @Column(length = 100)
     private String sp_password;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Diary> diary = new ArrayList<>();
-
-    //@Enumerated(EnumType.STRING)
-    //private Role role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_at;
