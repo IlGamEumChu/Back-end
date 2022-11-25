@@ -55,8 +55,3 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
-
-tasks.withType(JavaCompile) {
-    options.warnings = false
-}
-
