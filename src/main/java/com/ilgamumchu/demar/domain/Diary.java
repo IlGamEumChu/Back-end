@@ -1,6 +1,7 @@
 package com.ilgamumchu.demar.domain;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,9 +30,10 @@ public class Diary implements Serializable {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int emotion;
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_at;
 }

@@ -1,6 +1,7 @@
 package com.ilgamumchu.demar.controller;
 
 import com.ilgamumchu.demar.domain.User;
+import com.ilgamumchu.demar.dto.DiaryRequestDTO;
 import com.ilgamumchu.demar.dto.DiaryResponseDTO;
 import com.ilgamumchu.demar.service.DiaryService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import com.ilgamumchu.demar.security.jwt.UserDetailsImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,6 +28,18 @@ public class DiaryController {
 //        }
         System.out.println(userDetails.getUser().getId());
         return "test";
+    }
+
+    @GetMapping("/write")
+    public String diaryWritePage(){
+
+        return "diary/diary_write";
+    }
+
+    @PostMapping("/write")
+    public @ResponseBody String diaryWrite(@RequestBody @Valid DiaryRequestDTO diaryDTO) throws Exception {
+        diaryService.save(diaryDTO);
+        return "success";
     }
 
 }
