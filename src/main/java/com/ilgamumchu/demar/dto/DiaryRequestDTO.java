@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 
 @Setter
 @Getter
@@ -18,16 +17,12 @@ public class DiaryRequestDTO {
     private User userId;
     private String title;
     private String content;
-    private int emotion;
-    private Date createdAt;
 
     @Builder
-    public DiaryRequestDTO(User userId, String title, String content, int emotion, Date createdAt) {
+    public DiaryRequestDTO(User userId, String title, String content) {
         this.userId = userId;
         this.title = title;
         this.content = content;
-        this.emotion = emotion;
-        this.createdAt = createdAt;
     }
 
     public Diary toEntity(){
@@ -35,8 +30,6 @@ public class DiaryRequestDTO {
                 .user_id(this.userId)
                 .title(this.title)
                 .content(this.content)
-                .emotion(this.emotion)
-                .created_at(this.createdAt)
                 .build();
     }
 }

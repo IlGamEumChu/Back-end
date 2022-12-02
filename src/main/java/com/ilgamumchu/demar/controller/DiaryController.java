@@ -30,13 +30,13 @@ public class DiaryController {
         return "test";
     }
 
-    @GetMapping("/diary/write")
+    @GetMapping("/write")
     public String diaryWritePage(){
 
         return "diary/diary_write";
     }
 
-    @PostMapping("/diary/write")
+    @PostMapping("/write")
     public @ResponseBody String diaryWrite(@RequestBody @Valid DiaryRequestDTO diaryDTO) throws Exception {
         diaryService.save(diaryDTO);
         return "success";
