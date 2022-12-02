@@ -9,6 +9,5 @@ public class SignUpRequestDTO {
     private String email;
     private String password;
     private String name;
-    private String sp_id;
-    private String sp_password;
+    private String sp_token;
 }

@@ -24,7 +24,7 @@ public class Music {
     @Column(nullable = false)
     private String artist;
 
-    //private cover;
+    private String cover;
 
     private String url;
 
