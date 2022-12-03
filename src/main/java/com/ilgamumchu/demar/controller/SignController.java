@@ -28,7 +28,7 @@ public class SignController {
         User user = signService.signup(signUpRequestDTO);
         String checkEmail = user.getEmail();
         UserRole role = user.getRole();
-        System.out.println(checkEmail);
+
         String token = jwtTokenProvider.createToken(checkEmail, role);
 
         return new ResponseEntity<String>(token, HttpStatus.OK);
