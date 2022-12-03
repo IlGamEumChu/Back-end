@@ -40,7 +40,9 @@ public class SignService {
     private List<String> getMusics(JSONObject parsed){
         List<String> musicList = new ArrayList<>();
         JSONObject currentPlay = (JSONObject) parsed.get("currently_playing");
-        musicList.add(currentPlay.get("name").toString());
+        if(currentPlay != null){
+            musicList.add(currentPlay.get("name").toString());
+        }
 
         JSONArray queue = (JSONArray) parsed.get("queue");
 
