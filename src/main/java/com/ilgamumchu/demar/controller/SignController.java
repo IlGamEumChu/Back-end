@@ -24,8 +24,14 @@ public class SignController {
 
     @ResponseBody
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
-        return new ResponseEntity<User>(signService.signup(signUpRequestDTO), HttpStatus.OK);
+    public ResponseEntity<String> signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
+        User user = signService.signup(signUpRequestDTO);
+        String checkEmail = user.getEmail();
+        UserRole role = user.getRole();
+
+        String token = jwtTokenProvider.createToken(checkEmail, role);
+
+        return new ResponseEntity<String>(token, HttpStatus.OK);
     }
 
     @PostMapping("/login")
