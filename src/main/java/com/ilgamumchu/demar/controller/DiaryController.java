@@ -1,5 +1,6 @@
 package com.ilgamumchu.demar.controller;
 
+import com.ilgamumchu.demar.domain.Diary;
 import com.ilgamumchu.demar.domain.User;
 import com.ilgamumchu.demar.dto.DiaryRequestDTO;
 import com.ilgamumchu.demar.dto.DiaryResponseDTO;
@@ -52,4 +53,9 @@ public class DiaryController {
         return diaryService.findById(diaryId);
     }
 
+    @GetMapping(value = "/{userId}/{diaryId}/delete")
+    public String deleteDiary(@PathVariable Long diaryId){
+        diaryService.deleteById(diaryId);
+        return "deleted";
+    }
 }

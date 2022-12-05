@@ -42,7 +42,7 @@ public class DiaryServiceImpl implements DiaryService{
 
     @Override
     @Transactional
-    public void deleteById(Long boardId) {
-
+    public void deleteById(Long id) {
+        diaryRepository.deleteById(id);
     }
 }

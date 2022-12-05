@@ -16,5 +16,5 @@ public interface DiaryService {
 
     DiaryResponseDTO findById(Long id);
 
-    void deleteById(Long boardId);
+    void deleteById(Long id);
 }
