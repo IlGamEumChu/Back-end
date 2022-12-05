@@ -18,7 +18,7 @@ public class DiaryResponseDTO {
     private Date createdAt;
 
     public static DiaryResponseDTO create(Diary diary) {
-        return new DiaryResponseDTO(diary.getId(), diary.getUser_id(),
+        return new DiaryResponseDTO(diary.getId(), diary.getUserId(),
                 diary.getTitle(), diary.getContent(), diary.getEmotion(),
                 diary.getCreated_at());
     }

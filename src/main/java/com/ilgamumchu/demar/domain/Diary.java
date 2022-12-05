@@ -22,7 +22,7 @@ public class Diary implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
-    private User user_id;
+    private User userId;
 
     @Column(nullable = false)
     private String title;

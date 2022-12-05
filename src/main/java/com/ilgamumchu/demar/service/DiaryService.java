@@ -1,21 +1,20 @@
 package com.ilgamumchu.demar.service;
 
 import com.ilgamumchu.demar.domain.Diary;
+import com.ilgamumchu.demar.domain.User;
 import com.ilgamumchu.demar.dto.DiaryRequestDTO;
-import com.ilgamumchu.demar.repository.DiaryRepository;
+import com.ilgamumchu.demar.dto.DiaryResponseDTO;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
-@Service
-public class DiaryService {
-    private final DiaryRepository diaryRepository;
+import java.util.List;
 
-    @Transactional
-    public Long save(DiaryRequestDTO diaryDTO) throws Exception {
-        Diary diary = diaryRepository.save(diaryDTO.toEntity());
-        return diary.getId();
-    }
+public interface DiaryService {
+
+    Long save(DiaryRequestDTO diaryDTO);
+
+    List<DiaryResponseDTO> findAllByUserId(User user);
+
+    DiaryResponseDTO findById(Long id);
+
+    void deleteById(Long id);
 }
