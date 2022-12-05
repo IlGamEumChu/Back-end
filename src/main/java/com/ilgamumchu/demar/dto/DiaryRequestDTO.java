@@ -27,7 +27,7 @@ public class DiaryRequestDTO {
 
     public Diary toEntity(){
         return Diary.builder()
-                .user_id(this.userId)
+                .userId(this.userId)
                 .title(this.title)
                 .content(this.content)
                 .build();

@@ -36,10 +36,10 @@ public class SignService {
         String username = signUpRequestDTO.getName();
         String password = passwordEncoder.encode(signUpRequestDTO.getPassword());
         UserRole role = UserRole.ROLE_USER;
-        String sp_id = signUpRequestDTO.getSp_id();
-        String sp_password = passwordEncoder.encode(signUpRequestDTO.getSp_password());
+        String spId = signUpRequestDTO.getSpId();
+        String spPassword = passwordEncoder.encode(signUpRequestDTO.getSpPassword());
 
-        User user = new User(null,username, email, password, sp_id, sp_password, role, now);
+        User user = new User(null,username, email, password, spId, spPassword, role, now);
         userRepository.save(user);
         return user;
     }

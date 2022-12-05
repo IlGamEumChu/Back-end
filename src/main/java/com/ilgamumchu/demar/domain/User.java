@@ -28,10 +28,11 @@ public class User {
     @Column(length = 100)
     private String password;
 
-    private String sp_id;
+    @Column(name = "sp_id")
+    private String spId;
 
-    @Column(length = 100)
-    private String sp_password;
+    @Column(name = "sp_password", length = 100)
+    private String spPassword;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

@@ -10,11 +10,11 @@ public class UserResponseDTO {
     private String name;
     private String email;
     private String password;
-    private String sp_id;
-    private String sp_password;
+    private String spId;
+    private String spPassword;
 
     public static UserResponseDTO create(User user) {
         return new UserResponseDTO(user.getName(),
-                user.getEmail(), user.getPassword(), user.getSp_id(), user.getSp_password());
+                user.getEmail(), user.getPassword(), user.getSpId(), user.getSpPassword());
     }
 }
