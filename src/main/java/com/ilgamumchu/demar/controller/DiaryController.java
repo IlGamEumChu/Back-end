@@ -44,7 +44,12 @@ public class DiaryController {
 
     @GetMapping(value = "/{userId}")
     public List<DiaryResponseDTO> getUserDiaryList(@PathVariable User userId){
-       return diaryService.findAllByUser(userId);
+       return diaryService.findAllByUserId(userId);
+    }
+
+    @GetMapping(value = "/{userId}/{diaryId}")
+    public DiaryResponseDTO getSpecificDiary(@PathVariable Long diaryId){
+        return diaryService.findById(diaryId);
     }
 
 }

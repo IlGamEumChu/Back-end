@@ -12,9 +12,9 @@ public interface DiaryService {
 
     Long save(DiaryRequestDTO diaryDTO);
 
-    List<DiaryResponseDTO> findAllByUser(User user);
+    List<DiaryResponseDTO> findAllByUserId(User user);
 
-    Diary findById(Long id);
+    DiaryResponseDTO findById(Long id);
 
     void deleteById(Long boardId);
 }
