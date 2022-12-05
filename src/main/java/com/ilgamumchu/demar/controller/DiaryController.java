@@ -42,4 +42,9 @@ public class DiaryController {
         return "success";
     }
 
+    @GetMapping(value = "/{userId}")
+    public List<DiaryResponseDTO> getUserDiaryList(@PathVariable User userId){
+       return diaryService.findAllByUser(userId);
+    }
+
 }
