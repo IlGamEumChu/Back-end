@@ -18,9 +18,9 @@ public class PlayListTrack {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
-    private User user_id;
+    private User userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="music_id", nullable = false)
-    private Music music_id;
+    private Music musicId;
 }
