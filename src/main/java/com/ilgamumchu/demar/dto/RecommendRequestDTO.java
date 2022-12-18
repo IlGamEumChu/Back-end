@@ -14,12 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 public class RecommendRequestDTO {
 
-    private String content;
-    private List<Long> music;
+    private String sentence;
+    private List<Long> music_idx;
 
     @Builder
     public RecommendRequestDTO(String content, List<Long> music) {
-        this.content = content;
-        this.music = music;
+        this.sentence = content;
+        this.music_idx = music;
     }
 }
