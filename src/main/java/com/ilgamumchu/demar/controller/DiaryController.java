@@ -43,17 +43,18 @@ public class DiaryController {
         return "success";
     }
 
-    @GetMapping(value = "/{userId}")
-    public List<DiaryResponseDTO> getUserDiaryList(@PathVariable User userId){
-       return diaryService.findAllByUserId(userId);
+    @GetMapping(value = "/")
+    public List<DiaryResponseDTO> getUserDiaryList(@AuthenticationPrincipal UserDetailsImpl userDetails){
+       User user = userDetails.getUser();
+       return diaryService.findAllByUserId(user);
     }
 
-    @GetMapping(value = "/{userId}/{diaryId}")
+    @GetMapping(value = "/{diaryId}")
     public DiaryResponseDTO getSpecificDiary(@PathVariable Long diaryId){
         return diaryService.findById(diaryId);
     }
 
-    @GetMapping(value = "/{userId}/{diaryId}/delete")
+    @GetMapping(value = "/{diaryId}/delete")
     public String deleteDiary(@PathVariable Long diaryId){
         diaryService.deleteById(diaryId);
         return "deleted";
