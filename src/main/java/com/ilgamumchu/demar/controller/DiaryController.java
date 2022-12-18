@@ -21,14 +21,10 @@ import java.util.List;
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @GetMapping("/write")
-    public String diaryWritePage(){
-
-        return "diary/diary_write";
-    }
-
     @PostMapping("/write")
-    public @ResponseBody String diaryWrite(@RequestBody @Valid DiaryRequestDTO diaryDTO) throws Exception {
+    public @ResponseBody String diaryWrite(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody @Valid DiaryRequestDTO diaryDTO) throws Exception {
+        User user = userDetails.getUser();
+        diaryDTO.setUserId(user);
         diaryService.save(diaryDTO);
         return "success";
     }

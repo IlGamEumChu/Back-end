@@ -29,14 +29,14 @@ public class DiaryServiceImpl implements DiaryService{
     @Transactional(readOnly = true)
     public List<DiaryResponseDTO> findAllByUserId(User user) {
         return diaryRepository.findAllByUserId(user).stream()
-                .map(DiaryResponseDTO::create)
+                .map(DiaryResponseDTO::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public DiaryResponseDTO findById(Long id) {
-        return diaryRepository.findById(id).map(DiaryResponseDTO::create)
+        return diaryRepository.findById(id).map(DiaryResponseDTO::new)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일기입니다. id=" + id));
     }
 
