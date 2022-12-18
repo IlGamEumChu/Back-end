@@ -21,16 +21,6 @@ import java.util.List;
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @GetMapping(value = "/{diaryId}")
-    public String getAllDiary(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long diaryId){
-//        if (userDetails != null) {
-//            User user = userDetails.getUser();
-//            System.out.println(user.getRole());
-//        }
-        System.out.println(userDetails.getUser().getId());
-        return "test";
-    }
-
     @GetMapping("/write")
     public String diaryWritePage(){
 
