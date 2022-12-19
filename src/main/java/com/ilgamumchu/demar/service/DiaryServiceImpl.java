@@ -1,5 +1,6 @@
 package com.ilgamumchu.demar.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilgamumchu.demar.domain.Diary;
 import com.ilgamumchu.demar.domain.Music;
 import com.ilgamumchu.demar.domain.PlayListTrack;
@@ -7,11 +8,15 @@ import com.ilgamumchu.demar.domain.User;
 import com.ilgamumchu.demar.dto.DiaryRequestDTO;
 import com.ilgamumchu.demar.dto.DiaryResponseDTO;
 import com.ilgamumchu.demar.dto.RecommendRequestDTO;
+import com.ilgamumchu.demar.dto.RecommendResponseDTO;
 import com.ilgamumchu.demar.repository.DiaryRepository;
 
+import com.ilgamumchu.demar.repository.MusicRepository;
 import com.ilgamumchu.demar.repository.PlayListTrackRepository;
+import com.ilgamumchu.demar.repository.RecommendRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -26,6 +32,8 @@ import java.util.stream.Collectors;
 public class DiaryServiceImpl implements DiaryService{
     private final DiaryRepository diaryRepository;
     private final PlayListTrackRepository playListTrackRepository;
+    private final RecommendRepository recommendRepository;
+    private final MusicRepository musicRepository;
 
     private JSONObject parseToJson(String response) throws ParseException {
         JSONParser jsonParser = new JSONParser();
@@ -52,8 +60,16 @@ public class DiaryServiceImpl implements DiaryService{
                 .block();
 
         JSONObject parsed = parseToJson(response);
-        diaryRepository.save(diaryDTO.toEntity());
+        Diary diary = diaryRepository.save(diaryDTO.toEntity());
 
+        JSONArray temp = (JSONArray) parsed.get("recommend");
+
+        for(int i = 0; i < temp.size(); i++){
+            Long num = (Long) temp.get(i);
+            Music music = musicRepository.findById(num);
+            RecommendResponseDTO recommendResponseDTO = new RecommendResponseDTO(diary,music);
+            recommendRepository.save(recommendResponseDTO.toEntity());
+        }
         return parsed;
     }
 
