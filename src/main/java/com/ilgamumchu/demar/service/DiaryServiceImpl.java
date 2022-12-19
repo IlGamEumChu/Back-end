@@ -1,14 +1,8 @@
 package com.ilgamumchu.demar.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ilgamumchu.demar.domain.Diary;
-import com.ilgamumchu.demar.domain.Music;
-import com.ilgamumchu.demar.domain.PlayListTrack;
-import com.ilgamumchu.demar.domain.User;
-import com.ilgamumchu.demar.dto.DiaryRequestDTO;
-import com.ilgamumchu.demar.dto.DiaryResponseDTO;
-import com.ilgamumchu.demar.dto.RecommendRequestDTO;
-import com.ilgamumchu.demar.dto.RecommendResponseDTO;
+import com.ilgamumchu.demar.domain.*;
+import com.ilgamumchu.demar.dto.*;
 import com.ilgamumchu.demar.repository.DiaryRepository;
 
 import com.ilgamumchu.demar.repository.MusicRepository;
@@ -23,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -92,5 +87,19 @@ public class DiaryServiceImpl implements DiaryService{
     @Transactional
     public void deleteById(Long id) {
         diaryRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public List<MusicResponseDTO> findMusic(Long id){
+        List<MusicResponseDTO> musicList = new ArrayList<>();
+        Optional<Diary> diary = diaryRepository.findById(id);
+        List<Recommend> recommendList = recommendRepository.findAllByDiaryId(diary);
+        for(int i = 0; i < recommendList.size(); i++){
+            Music music = recommendList.get(i).getMusicId();
+            MusicResponseDTO musicResponseDTO = new MusicResponseDTO(music);
+            musicList.add(musicResponseDTO);
+        }
+        return musicList;
     }
 }

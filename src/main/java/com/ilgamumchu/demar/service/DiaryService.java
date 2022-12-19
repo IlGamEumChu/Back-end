@@ -4,6 +4,7 @@ import com.ilgamumchu.demar.domain.Diary;
 import com.ilgamumchu.demar.domain.User;
 import com.ilgamumchu.demar.dto.DiaryRequestDTO;
 import com.ilgamumchu.demar.dto.DiaryResponseDTO;
+import com.ilgamumchu.demar.dto.MusicResponseDTO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -19,4 +20,6 @@ public interface DiaryService {
     DiaryResponseDTO findById(Long id);
 
     void deleteById(Long id);
+
+    List<MusicResponseDTO> findMusic(Long id);
 }

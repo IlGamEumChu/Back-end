@@ -3,6 +3,7 @@ package com.ilgamumchu.demar.controller;
 import com.ilgamumchu.demar.domain.User;
 import com.ilgamumchu.demar.dto.DiaryRequestDTO;
 import com.ilgamumchu.demar.dto.DiaryResponseDTO;
+import com.ilgamumchu.demar.dto.MusicResponseDTO;
 import com.ilgamumchu.demar.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -42,5 +43,10 @@ public class DiaryController {
     public String deleteDiary(@PathVariable Long diaryId){
         diaryService.deleteById(diaryId);
         return "deleted";
+    }
+
+    @GetMapping(value = "/music/{diaryId}")
+    public List<MusicResponseDTO> getDiaryMusic(@PathVariable Long diaryId){
+        return diaryService.findMusic(diaryId);
     }
 }
