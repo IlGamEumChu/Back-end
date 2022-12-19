@@ -24,6 +24,6 @@ public class DiaryResponseDTO {
         this.title = diary.getTitle();
         this.content = diary.getContent();
         this.emotion = diary.getEmotion();
-        this.createdAt = diary.getCreated_at();
+        this.createdAt = diary.getCreatedAt();
     }
 }

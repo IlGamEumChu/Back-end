@@ -32,5 +32,6 @@ public class User {
     private UserRole role;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created_at;
+    @Column(name = "created_at")
+    private Date createdAt;
 }

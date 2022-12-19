@@ -60,7 +60,7 @@ public class DiaryServiceImpl implements DiaryService{
     @Override
     @Transactional(readOnly = true)
     public List<DiaryResponseDTO> findAllByUserId(User user) {
-        return diaryRepository.findAllByUserId(user).stream()
+        return diaryRepository.findAllByUserIdOrderByCreatedAtDesc(user).stream()
                 .map(DiaryResponseDTO::new)
                 .collect(Collectors.toList());
     }
@@ -68,6 +68,7 @@ public class DiaryServiceImpl implements DiaryService{
     @Override
     @Transactional(readOnly = true)
     public DiaryResponseDTO findById(Long id) {
+
         return diaryRepository.findById(id).map(DiaryResponseDTO::new)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일기입니다. id=" + id));
     }
