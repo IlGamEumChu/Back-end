@@ -22,7 +22,7 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @PostMapping("/write")
-    public @ResponseBody JSONObject diaryWrite(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody @Valid DiaryRequestDTO diaryDTO) throws Exception {
+    public @ResponseBody Long diaryWrite(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody @Valid DiaryRequestDTO diaryDTO) throws Exception {
         User user = userDetails.getUser();
         diaryDTO.setUserId(user);
         return diaryService.save(diaryDTO);

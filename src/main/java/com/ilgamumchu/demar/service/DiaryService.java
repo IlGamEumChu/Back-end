@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface DiaryService {
 
-    JSONObject save(DiaryRequestDTO diaryDTO) throws ParseException;
+    Long save(DiaryRequestDTO diaryDTO) throws ParseException;
 
     List<DiaryResponseDTO> findAllByUserId(User user);
 

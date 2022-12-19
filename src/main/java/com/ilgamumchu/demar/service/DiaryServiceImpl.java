@@ -38,7 +38,7 @@ public class DiaryServiceImpl implements DiaryService{
 
     @Override
     @Transactional
-    public JSONObject save(DiaryRequestDTO diaryDTO) throws ParseException {
+    public Long save(DiaryRequestDTO diaryDTO) throws ParseException {
         String content = diaryDTO.getContent();
 
         List<Long> playList = playListTrackRepository.findAllByUserId(diaryDTO.getUserId())
@@ -65,7 +65,7 @@ public class DiaryServiceImpl implements DiaryService{
             RecommendResponseDTO recommendResponseDTO = new RecommendResponseDTO(diary,music);
             recommendRepository.save(recommendResponseDTO.toEntity());
         }
-        return parsed;
+        return diary.getId();
     }
 
     @Override
