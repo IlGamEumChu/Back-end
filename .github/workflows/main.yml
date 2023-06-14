@@ -21,13 +21,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_S3_REGION }}
 
-      ## create application.properties
-      - name: make application-prod.properties
-        run: touch ./src/main/resources/application-prod.properties
+      ## create application.yml
+      - name: make application-prod.yml
+        run: touch ./src/main/resources/application-prod.yml
         shell: bash
 
-      - name: deliver application-prod.properties
-        run: echo "${{ secrets.PROPERTIES }}" > ./src/main/resources/application-prod.properties
+      - name: deliver application-prod.yml
+        run: echo "${{ secrets.PROPERTIES }}" > ./src/main/resources/application-prod.yml
         shell: bash
 
       # build spring boot project
