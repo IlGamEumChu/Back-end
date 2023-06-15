@@ -8,19 +8,25 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
-@Table(name="Recommend")
 @Entity
+@Table(name = "\"Recommend\"")
 public class Recommend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "recommend_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="diary_id", nullable = false)
-    private Diary diaryId;
+    private Diary diary;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="music_id", nullable = false)
-    private Music musicId;
+    private Music music;
+
+    @Builder
+    public Recommend(Diary diary, Music music) {
+        this.diary = diary;
+        this.music = music;
+    }
 }

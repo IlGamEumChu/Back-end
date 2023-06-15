@@ -3,24 +3,16 @@ package com.ilgamumchu.demar.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
-@Builder
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Setter
-@Table(name="User")
 @Entity
+@Table(name = "\"User\"")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "user_id")
     private Long id;
-
-    @Column(nullable = false)
-    private String name;
 
     @Column(nullable = false)
     private String email;
@@ -28,10 +20,13 @@ public class User {
     @Column(length = 100)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+    @Column(nullable = false)
+    private String name;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt;
+    @Builder
+    public User(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
 }

@@ -11,11 +11,12 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "Music")
+@Table(name = "\"Music\"")
 public class Music {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "music_id")
     private Long id;
 
     @Column(nullable = false)
@@ -25,7 +26,4 @@ public class Music {
     private String artist;
 
     private String cover;
-
-    private String url;
-
 }

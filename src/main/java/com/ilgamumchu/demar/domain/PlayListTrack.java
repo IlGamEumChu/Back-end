@@ -8,13 +8,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
-@Table(name="PlayListTrack")
 @Entity
+@Table(name = "\"PlayListTrack\"")
 public class PlayListTrack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "playlist_track_id")
+    private Long playlist_track_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
