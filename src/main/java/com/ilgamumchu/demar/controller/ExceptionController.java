@@ -1,22 +1,26 @@
 package com.ilgamumchu.demar.controller;
 
-import com.ilgamumchu.demar.utils.exception.AuthenticationEntryPointException;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ilgamumchu.demar.common.ApiResponse;
+import com.ilgamumchu.demar.utils.exception.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RequestMapping(value = "/exception")
-@RestController
+@RestControllerAdvice
 public class ExceptionController {
-
-    @GetMapping(value = "/entry")
-    public void EntryPointException() {
-        throw new AuthenticationEntryPointException();
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<ApiResponse> tokenFailureException (TokenException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(ex.getMessage()));
     }
 
-    @GetMapping(value = "/denied")
-    public void AccessDeniedException() {
-        throw new AccessDeniedException("");
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ApiResponse> authFailureException (AuthException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(ex.getMessage()));
+    }
+
+    @ExceptionHandler(DiaryException.class)
+    public ResponseEntity<ApiResponse> diaryFailureException (DiaryException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(ex.getMessage()));
     }
 }
