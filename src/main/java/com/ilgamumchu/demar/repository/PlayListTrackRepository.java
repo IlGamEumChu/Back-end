@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PlayListTrackRepository extends JpaRepository<PlayListTrack, String> {
-    List<PlayListTrack> findAllByUserId(User user);
+    List<PlayListTrack> findAllByUserId(Long id);
 }

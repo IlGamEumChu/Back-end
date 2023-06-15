@@ -10,10 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Long>{
-
     Optional<Diary> findById(Long id);
-
-    List<Diary> findAllByUserId(User user);
-
-    List<Diary> findAllByUserIdOrderByCreatedAtDesc(User user);
+    List<Diary> findAllByUserIdOrderByCreatedAtDesc(Long id);
 }
