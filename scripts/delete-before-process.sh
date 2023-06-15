@@ -1,1 +1,1 @@
-rm -rf /home/ubuntu/demar-server
+rm -rf /home/ubuntu/Demar
