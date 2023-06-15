@@ -31,7 +31,7 @@ public class AuthService {
         val email = signUpRequestDTO.email();
         val username = signUpRequestDTO.name();
 
-        userRepository.existsByEmail(email)
+        userRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthException(ErrorMessage.DUPLICATED_EMAIL.getName()));
 
         val password = passwordEncoder.encode(signUpRequestDTO.password());
