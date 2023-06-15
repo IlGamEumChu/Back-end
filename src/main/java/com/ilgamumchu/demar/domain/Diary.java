@@ -12,17 +12,18 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Diary")
+@Table(name = "\"Diary\"")
 @Entity
 public class Diary implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "diary_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
-    private User userId;
+    private User user;
 
     @Column(nullable = false)
     private String title;
@@ -30,11 +31,15 @@ public class Diary implements Serializable {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = true)
-    private int emotion;
-
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;
+
+    @Builder
+    public Diary(User user, String title, String content) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+    }
 }
