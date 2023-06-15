@@ -1,73 +1,127 @@
 package com.ilgamumchu.demar.security.jwt;
 
-import com.ilgamumchu.demar.domain.UserRole;
-import com.ilgamumchu.demar.service.SignDetailsServiceImpl;
-import io.jsonwebtoken.*;
+import com.ilgamumchu.demar.common.ErrorMessage;
+import com.ilgamumchu.demar.utils.exception.TokenException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-@Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Service
 public class JwtTokenProvider {
-    private final SignDetailsServiceImpl signDetailsServiceImpl;
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+    @Value("${spring.jwt.secretKey.access}")
+    private String accessSecretKey;
 
-    private Long tokenValidTime = 240 * 60 * 1000L;
+    private final ZoneId KST = ZoneId.of("Asia/Seoul");
 
-    @PostConstruct
-    protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
+    public String generateAccessToken(Authentication authentication) {
+        val encodedKey = encodeKey(accessSecretKey);
+        val secretKeyBytes = DatatypeConverter.parseBase64Binary(encodedKey);
+        val accessKey = new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS256.getJcaName());
 
-    public String createToken(String email, UserRole role) {
-
-        Date now = new Date();
-        Claims claims = Jwts.claims()
-                .setSubject("access_token")
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime));
-
-        claims.put("email", email);
-        claims.put("role", role);
+        val now = getCurrentTime();
+        val expireTime = Date.from(now.plusHours(5).atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
-                .setHeaderParam("typ", "JWT")
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setSubject(String.valueOf(authentication.getPrincipal()))
+                .setHeader(createHeader())
+                .setExpiration(expireTime)
+                .signWith(accessKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = signDetailsServiceImpl.loadUserByUsername(this.getUserPk(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    public boolean validateTokenExpiration(String token) {
+        try {
+            val claims = getClaimsFromToken(token);
+
+            val now = getCurrentTime();
+            val expireTime = claims.getExpiration().toInstant().atZone(KST).toLocalDateTime();
+            if (expireTime.isBefore(now)) {
+                throw new TokenException(ErrorMessage.EXPIRED_TOKEN.getName());
+            }
+
+            return true;
+        } catch (ExpiredJwtException e) {
+            throw new TokenException(ErrorMessage.EXPIRED_TOKEN.getName());
+        } catch (SignatureException e) {
+            throw new TokenException(ErrorMessage.INVALID_SIGNATURE.getName());
+        }
     }
 
-    public String getUserPk(String token) {
-        return (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("email");
+    public AdminAuthentication getAuthentication(String token) {
+        return new AdminAuthentication(getId(token), null, null);
+    }
+
+    public Long getId(String token) {
+        try {
+            val claims = getClaimsFromToken(token);
+
+            val now = getCurrentTime();
+            val expireTime = claims.getExpiration().toInstant().atZone(KST).toLocalDateTime();
+            if (expireTime.isBefore(now)) {
+                throw new TokenException(ErrorMessage.EXPIRED_TOKEN.getName());
+            }
+
+            return Long.parseLong(claims.getSubject());
+        } catch (ExpiredJwtException e) {
+            throw new TokenException(ErrorMessage.EXPIRED_TOKEN.getName());
+        } catch (SecurityException e) {
+            throw new TokenException(ErrorMessage.INVALID_SIGNATURE.getName());
+        }
+    }
+
+    private Claims getClaimsFromToken(String token) {
+        val encodedKey = encodeKey(accessSecretKey);
+
+        return Jwts.parserBuilder()
+                .setSigningKey(encodedKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+        val headerAuth = request.getHeader("Authorization");
+        return (StringUtils.hasText(headerAuth)) ? headerAuth : null;
     }
 
-    public boolean validateToken(String jwtToken) {
-        try {
-            Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody();
+    private String encodeKey(String secretKey) {
+        return Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
+    }
 
-            return !claims.getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
-        }
+    private LocalDateTime getCurrentTime() {
+        return LocalDateTime.now(KST);
+    }
+
+    private Map<String, Object> createHeader() {
+        Map<String, Object> header = new HashMap<>();
+
+        header.put("typ", "JWT");
+        header.put("alg", "HS256");
+        header.put("regDate", System.currentTimeMillis());
+
+        return header;
     }
 }

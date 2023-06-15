@@ -1,45 +1,42 @@
 package com.ilgamumchu.demar.security.config;
 
-import com.ilgamumchu.demar.security.jwt.JwtTokenProvider;
-import com.ilgamumchu.demar.security.jwt.JwtAutenticationFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.ilgamumchu.demar.security.jwt.JwtAuthenticationFilter;
 
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final JwtTokenProvider jwtTokenProvider;
+@EnableWebSecurity
+@Configuration
+public class SecurityConfig {
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public BCryptPasswordEncoder encoderPassword() {
-        return new BCryptPasswordEncoder();
+    public static PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/h2-console/**");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable();
-        http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests()
-                .antMatchers( "/sign/signup", "/", "/sign/login", "/css/**", "/exception/**", "/favicon.ico").permitAll()
-                .anyRequest().authenticated();
-        http.addFilterBefore(new JwtAutenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-        http.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
-        http.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
-
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.antMatcher("/**")
+                .httpBasic().disable()
+                .csrf().disable()
+                .formLogin().disable()
+                .authorizeRequests()
+                .antMatchers("/v2/api-docs/**", "/swagger-ui.html", "/webjars/swagger-ui/**", "/swagger-ui/**", "/api/v1/auth/**","/exception/**").permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/v1/**").authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
