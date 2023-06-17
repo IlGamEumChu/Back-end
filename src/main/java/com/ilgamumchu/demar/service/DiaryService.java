@@ -19,14 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class DiaryService {
     private final DiaryRepository diaryRepository;
-    private final PlayListTrackRepository playListTrackRepository;
     private final RecommendRepository recommendRepository;
     private final MusicRepository musicRepository;
     private final UserRepository userRepository;
@@ -40,7 +38,7 @@ public class DiaryService {
         val user = userRepository.findUserById(userId)
                 .orElseThrow(() -> new AuthException(ErrorMessage.INVALID_MEMBER.getName()));
 
-        val playList = playListTrackRepository.findAllByUserId(userId)
+        val playList = user.getPlayListTracks()
                 .stream().map(PlayListTrack::getMusicId).map(Music::getId)
                 .collect(Collectors.toList());
 
@@ -48,7 +46,7 @@ public class DiaryService {
 
         val client = WebClient.create();
         val response = client.post()
-                .uri(modelServerUri + "/analysis")
+                .uri(modelServerUri + "/analyze")
                 .bodyValue(recommendRequestDTO)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -62,6 +60,7 @@ public class DiaryService {
         }
         val diary = diaryRepository.save(Diary.builder()
                         .title(diaryDTO.title())
+                        .content(diaryDTO.content())
                         .user(user)
                         .build());
 

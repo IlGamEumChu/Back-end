@@ -1,3 +1,3 @@
 sudo pkill -6 java
 source /home/ubuntu/.env
-SPRING_PROFILES_ACTIVE=production java -jar /home/ubuntu/Demar/build/libs/*.jar 1>>/home/ubuntu/log/spring-log.log 2>>/home/ubuntu/log/spring-error.log &
+nohup java -jar -Dserver.port=8080 -Dspring.profiles.active=prod /home/ubuntu/Demar/build/libs/*.jar > /dev/null 2> /dev/null < /dev/null &

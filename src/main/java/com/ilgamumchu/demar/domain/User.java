@@ -3,6 +3,8 @@ package com.ilgamumchu.demar.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,6 +24,9 @@ public class User {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "userId")
+    private final List<PlayListTrack> playListTracks = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String name) {
