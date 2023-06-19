@@ -84,10 +84,16 @@ public class DiaryService {
                 .collect(Collectors.toList());
     }
 
-    public DiaryResponseDTO getDiary(Long id) {
+    public DiarySingleResponseDTO getDiary(Long id) {
         val diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new DiaryException(ErrorMessage.INVALID_DIARY.getName()));
-        return DiaryResponseDTO.of(diary);
+
+        val recommend = recommendRepository.findAllByDiaryId(diary.getId())
+                .stream()
+                .map(recomm -> DiaryWriteMusicResponseDTO.of((recomm).getMusic()))
+                .collect(Collectors.toList());
+
+        return DiarySingleResponseDTO.of(diary, recommend);
     }
 
     @Transactional
