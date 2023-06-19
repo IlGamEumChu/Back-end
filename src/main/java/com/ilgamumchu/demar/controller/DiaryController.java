@@ -24,14 +24,14 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @ApiOperation(value = "일기 작성")
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<ApiResponse> createDiary(@ApiIgnore Principal principal, @RequestBody @Valid DiaryWriteRequestDTO request) {
         val response = diaryService.writeDiary(getMemberId(principal), request);
         return ResponseEntity.ok(ApiResponse.success(SUCCESS_DIARY_WRITE.getMessage(), response));
     }
 
     @ApiOperation(value = "일기 목록 가져오기")
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public ResponseEntity<ApiResponse> getDiaryList(@ApiIgnore Principal principal) {
        val response = diaryService.getDiaryList(getMemberId(principal));
        return ResponseEntity.ok(ApiResponse.success(SUCCESS_DIARY_LIST_GET.getMessage(), response));

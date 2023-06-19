@@ -42,7 +42,7 @@ public class JwtTokenProvider {
         val accessKey = new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS256.getJcaName());
 
         val now = getCurrentTime();
-        val expireTime = Date.from(now.plusHours(5).atZone(ZoneId.systemDefault()).toInstant());
+        val expireTime = Date.from(now.plusHours(20).atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
                 .setSubject(String.valueOf(authentication.getPrincipal()))
