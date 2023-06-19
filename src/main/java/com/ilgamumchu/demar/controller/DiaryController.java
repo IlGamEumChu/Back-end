@@ -59,7 +59,6 @@ public class DiaryController {
     }
 
     private Long getMemberId(Principal principal) {
-        System.out.println("tset" + principal);
         return nonNull(principal) ? Long.valueOf(principal.getName()) : null;
     }
 }

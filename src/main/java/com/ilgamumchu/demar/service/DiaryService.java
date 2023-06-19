@@ -33,7 +33,7 @@ public class DiaryService {
     private String modelServerUri;
 
     @Transactional
-    public Long writeDiary(Long userId, DiaryWriteRequestDTO diaryDTO) {
+    public DiaryWriteResponseDTO writeDiary(Long userId, DiaryWriteRequestDTO diaryDTO) {
 
         val user = userRepository.findUserById(userId)
                 .orElseThrow(() -> new AuthException(ErrorMessage.INVALID_MEMBER.getName()));
@@ -66,16 +66,15 @@ public class DiaryService {
 
         val recommedList = (JSONArray) parsed.get("recommend");
 
-        recommedList.stream()
+        List<Music> MusicList = (List<Music>) recommedList.stream()
                 .map(num -> musicRepository.findById((Long) num))
-                .forEach(music -> recommendRepository.save(Recommend.builder()
+                .map(music -> recommendRepository.save(Recommend.builder()
                         .music((Music) music)
                         .diary(diary)
-                        .build()));
+                        .build()))
+                .collect(Collectors.toList());
 
-        val diaryId = diary.getId();
-
-        return diaryId;
+        return DiaryWriteResponseDTO.of(diary, MusicList);
     }
     public List<DiaryResponseDTO> getDiaryList(Long userId) {
         return diaryRepository.findAllByUserIdOrderByCreatedAtDesc(userId)
