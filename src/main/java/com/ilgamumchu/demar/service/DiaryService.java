@@ -72,7 +72,7 @@ public class DiaryService {
                         .music((Music) music)
                         .diary(diary)
                         .build()))
-                .map(music -> DiaryWriteMusicResponseDTO.of((Music)music))
+                .map(recommend -> DiaryWriteMusicResponseDTO.of(((Recommend) recommend).getMusic()))
                 .collect(Collectors.toList());
 
         return DiaryWriteResponseDTO.of(diary, MusicList);
