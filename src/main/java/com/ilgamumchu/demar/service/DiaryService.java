@@ -66,12 +66,13 @@ public class DiaryService {
 
         val recommedList = (JSONArray) parsed.get("recommend");
 
-        List<Music> MusicList = (List<Music>) recommedList.stream()
+        val MusicList = (List<DiaryWriteMusicResponseDTO>) recommedList.stream()
                 .map(num -> musicRepository.findById((Long) num))
                 .map(music -> recommendRepository.save(Recommend.builder()
                         .music((Music) music)
                         .diary(diary)
                         .build()))
+                .map(music -> DiaryWriteMusicResponseDTO.of((Music)music))
                 .collect(Collectors.toList());
 
         return DiaryWriteResponseDTO.of(diary, MusicList);
